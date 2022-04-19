@@ -14,7 +14,6 @@ const generalController = require('../controller/generalController.js');
 
 
 // router.get('/contact', generalController.getContact);
-// // router.post('/contact',reCaptcha, generalController.postContact);
 // router.post('/contact', generalController.postContact);
 
 
