@@ -6,7 +6,7 @@ var bodyParser = require('body-parser');
 // routes
 
 const generalRoutes = require('./routes/generalRoutes');
-const app =express();
+const app = express();
 
 // setting ejs view engine
 app.set('view engine', 'ejs');
@@ -19,10 +19,21 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-app.get('/',(req,res)=>{
+app.get('/', (req, res) => {
   res.render('index')
 });
 
-app.use('/', generalRoutes);
+app.get('/login', (req, res) => {
+  res.render('login')
+});
+app.get('/register', (req, res) => {
+  res.render('register')
+});
+app.get('/contact', (req, res) => {
+  res.render('contact')
+});
 
-app.listen(5000,()=>console.log('listening to server on 5000'))
+
+// app.use('/', generalRoutes);
+
+app.listen(5000, () => console.log('listening to server on 5000'))
