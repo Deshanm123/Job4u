@@ -127,26 +127,28 @@ form.addEventListener('submit', function (e) {
 
         }),
         success: (data) => {
-            // resetting
-          $('#message-alert').html('');
+          console.log(data);
+          window.location.assign('/citizen/dashboard/');
+          // resetting
+          // $('#message-alert').html('');
 
-          const alertElement =
-            ` <div class=" alert alert-${data.msgType} alert-dismissible fade show py-3 text-center" role="alert"
-              id="alert-role" >
-              <strong id="message-area">${data.msg}</strong>
-              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>;
-          `;        
-          $('#message-alert').html(alertElement);
-          $('#message-alert').show();
-          window.scrollTo({ top: 0, behavior: 'smooth' });
+          // const alertElement =
+          //   ` <div class=" alert alert-${data.msgType} alert-dismissible fade show py-3 text-center" role="alert"
+          //     id="alert-role" >
+          //     <strong id="message-area">${data.msg} click here to <a href="/citizen/login">login</a></strong>
+          //     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          //       <span aria-hidden="true">&times;</span>
+          //     </button>
+          //   </div>;
+          //  `;
+          // $('#message-alert').html(alertElement);
+          // $('#message-alert').show();
+
         },
-        error: (xhr) =>{
+        error: (xhr) => {
 
-         let data =xhr.responseJSON;
-          
+          let data = xhr.responseJSON;
+
           $('#message-alert').html('');
 
           const alertElement =
@@ -160,8 +162,8 @@ form.addEventListener('submit', function (e) {
           `;
           $('#message-alert').html(alertElement);
           $('#message-alert').show();
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-         
+
+
         }
         // statusCode: {
         //   401: function () {
