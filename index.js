@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const path = require('path');
 var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
 
 // routes
 const citizenRoutes = require('./routes/citizenRoutes');
@@ -14,7 +15,8 @@ const app = express();
 
 // setting ejs view engine
 app.set('view engine', 'ejs');
-
+// cookie-parser
+app.use(cookieParser());
 app.use(bodyParser.json());
 // access parameters in req.body
 app.use(bodyParser.urlencoded({ extended: false }));

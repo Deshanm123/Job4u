@@ -67,9 +67,9 @@ function checkLength(input, min, max) {
   }
 }
 
-// $(document).ready(() => {
-//   $('#message-alert').hide();
-// });
+$(document).ready(() => {
+  $('#message-alert').hide();
+});
 
 
 
@@ -78,18 +78,41 @@ loginForm.addEventListener('submit', (e) => {
   e.preventDefault();
   let requiredStatus = checkRequired([email, password]);
   console.log("is all inputs are filled ?" + requiredStatus)
-  let ready = false;
+
   if (requiredStatus) {
     if (checkLength(password, 6, 25) && checkEmail(email)) {
-      console.log("Ready to submit")
-      ready = true;
-    } else {
-      console.log("error");
+      // allow to submit
+      $.ajax({
+        type: "POST",
+        url: "/citizen/login",
+        contentType: "application/json",
+        data: JSON.stringify({
+          email: email.value,
+          password: password.value,
+        }),
+        success: (data) => {
+          console.log(data);
+          window.location.assign('/citizen/dashboard/');
+        },
+        error: (xhr) => {
+          let data = xhr.responseJSON;
+          $('#message-alert').html('');
+
+          const alertElement =
+            ` <div class=" alert alert-${data.msgType} alert-dismissible fade show py-3 text-center" role="alert"
+             id="alert-role" >
+             <strong id="message-area">${xhr.status}:${data.msg}</strong>
+             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+               <span aria-hidden="true">&times;</span>
+             </button>
+           </div>
+          `;
+          $('#message-alert').html(alertElement);
+         $('#message-alert').show();
+       }
+       })
+      }
     }
-  }
-  if (ready) {
-    console.log('submit');
-  }
 
 })
 

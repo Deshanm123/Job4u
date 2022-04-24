@@ -22,6 +22,7 @@ class Citizen {
     });
   }
 
+  // get user detials by email
   static getCitizenDetailsByMail(email) {
     return new Promise((resolve, reject) => {
       pool.getConnection((err, connection) => {
@@ -38,6 +39,50 @@ class Citizen {
       });
     });
   }
+  // get user detials from id 
+  static getCitizenDetailsById(id) {
+    return new Promise((resolve, reject) => {
+      pool.getConnection((err, connection) => {
+        if (err) throw err;
+        connection.query("SELECT * FROM user_tb WHERE userId = ?", id, (err, rows) => {
+          connection.release();
+          if (!err) {
+            resolve(rows);
+          }
+          else {
+            reject(err);
+          }
+        });
+      });
+    });
+  }
+
+
+  // get cv details 
+  static addCVDetails(input) {
+    console.log(input)
+    // converting affiliation array to json
+    let affiliationsJson = JSON.stringify(Object.assign({}, input.affiliations));
+    let locationjson = JSON.stringify(Object.assign({}, input.location));
+    return new Promise((resolve, reject) => {
+      pool.getConnection((err, connection) => {
+        if (err) throw err;
+        connection.query("INSERT INTO cvdetails_tb(userId, birthday, jobName, affiliations, location) VALUES(?,?,?,?,?)", [input.userId, input.birthday, input.jobName, affiliationsJson, locationjson], (err, rows) => {
+          connection.release();
+          if (!err) {
+            resolve(rows);
+          }
+          else {
+            reject(err);
+          }
+        });
+      });
+    });
+
+
+  }
+
+
 
 }
 

@@ -18,9 +18,6 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
   <link rel="stylesheet" href="/public/assets/css/style.css">
 </head>
-<!-- <style>
-  
-</style> -->
 
 <body>
 
@@ -28,48 +25,110 @@
   <%- include('citizen_nav')%>
     <!-- navbar -->
 
-    <!-- ======= Featured Services Section ======= -->
-    <section id="featured-services" class="featured-services section-bg">
-      <div class="container p-5">
+    <!-- ======= Services Section ======= -->
+    <section id="services" class="services section-bg">
+      <div class="container p-5" data-aos="fade-up">
+        <div class=container" id="message-alert">
 
-        <div class="row no-gutters">
-
-          <div class="col-lg-4 col-md-6">
-            <div class="icon-box">
-              <div class="icon"><i class="bi bi-laptop"></i></div>
-              <h4 class="title"><a href="">Lorem Ipsum</a></h4>
-              <p class="description">
-                Voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint
-                occaecati cupiditate non provident
-              </p>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6">
-            <div class="icon-box">
-              <div class="icon"><i class="bi bi-briefcase"></i></div>
-              <h4 class="title"><a href="">Dolor Sitema</a></h4>
-              <p class="description">
-                Minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                commodo consequat tarad limino ata
-              </p>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6">
-            <div class="icon-box">
-              <div class="icon"><i class="bi bi-calendar4-week"></i></div>
-              <h4 class="title"><a href="">Sed ut perspiciatis</a></h4>
-              <p class="description">
-                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                fugiat nulla pariatur trade stravi
-              </p>
-            </div>
-          </div>
         </div>
+
+        <div class="section-title">
+          <h2>POST /ADD Services</h2>
+          <p>Check out the great services we offer</p>
+        </div>
+
+        <div class="row ">
+          <div class="col-12 col-lg-6 d-flex align-items-stretch p-3" data-aos="zoom-in" data-aos-delay="100">
+            <div class="icon-box">
+              <div class="icon"><i class="bx bxl-dribbble"></i></div>
+              <h4 class="title"><a href="">Upload the CV </a></h4>
+              <p class="description">Voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint
+                occaecati cupiditate</p>
+              <div class="container">
+
+                <form action="/citizen/nid/cv" enctype="multipart/form-data" method="POST" id="cv-document-upload-form">
+                  <div class="form-group">
+                    <input type="file" class="form-control-file" accept="image/*,.pdf,.doc,.docx,application/msword"
+                      name="cv" id="cv-input">
+                    <input type="submit" value="submit!" class="btn btn-primary m-3">
+                  </div>
+                </form>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="col-12 col-lg-6 d-flex align-items-stretch p-3" data-aos="zoom-in" data-aos-delay="200">
+            <div class="icon-box">
+              <div class="icon"><i class="bx bx-file"></i></div>
+              <h4 class="title"><a href="">Upload Birth Certificate</a></h4>
+              <p class="description">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
+                fugiat
+                nulla</p>
+              <form action="/citizen/nid/birthCertificate" enctype="multipart/form-data" method="POST"
+                id="birthday-document-upload-form">
+                <div class="form-group">
+                  <input type="file" class="form-control-file" name="birthCertificate" id="birthCertificate"
+                    accept="image/*,.pdf,.doc,.docx,application/msword">
+                  <input type="submit" value="submit!" class="btn btn-primary m-3">
+                </div>
+              </form>
+            </div>
+          </div>
+
+        </div>
+
+
+        <h3>HIGHEST LEVEL QUALIFICATION AND CERTIFICATES</h3>
+        <div class="row ">
+          <div class="col-12 col-lg-6 d-flex align-items-stretch p-3" data-aos="zoom-in" data-aos-delay="300">
+            <div class="icon-box">
+              <div class="icon"><i class="bx bx-tachometer"></i></div>
+              <h4 class="title"><a href="">highest level qualification </a></h4>
+              <p class="description">Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
+                mollit anim</p>
+              <fieldset>
+                <select class="form-select form-control form-control-lg form-select-lg mb-3 border border-secondary" n"
+                  id="education" name="education">
+                  <option value="" selected="selected" disabled="disabled">-- select one --</option>
+                  <option value="No formal education">No formal education</option>
+                  <option value="Doctorate or higher">Doctorate or higher</option>
+                  <option value="Master's degree">Master's degree</option>
+                  <option value="Bachelor's degree">Bachelor's degree</option>
+                  <option value="Vocational qualification">Vocational qualification</option>
+                  <option value="Secondary education">G.C.E Adavanced Level Certification</option>
+                  <option value="Secondary education">G.C.E Oridinary Level Certification</option>
+                  <option value="other">Other</option>
+                </select>
+              </fieldset>
+            </div>
+          </div>
+
+          <div class="col-12 col-lg-6 d-flex align-items-stretch p-3" data-aos="zoom-in" data-aos-delay="400">
+            <div class="icon-box">
+              <div class="icon"><i class="bx bx-world"></i></div>
+              <h4 class="title"><a href="">Certificates</a></h4>
+              <p class="description">At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis
+                praesentium
+                voluptatum</p>
+              <form action="/citizen/nid/certificates" enctype="multipart/form-data" method="POST"
+                id="certificate-upload-form">
+                <div class="form-group">
+                  <input type="file" multiple='multiple' class="form-control-file" name="certificates"
+                    accept="image/*,.pdf,.doc,.docx,application/msword" name="certificates[]" id="certificates[]">
+                  <input type="submit" value="submit!" class="btn btn-primary m-3">
+                </div>
+              </form>
+            </div>
+          </div>
+
+        </div>
+
       </div>
-    </section>
-    <!-- End Featured Services Section -->
+    </section><!-- End Services Section -->
+
+
+
 
 
 
@@ -84,7 +143,9 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
       integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
       crossorigin="anonymous"></script>
-
+    <script src="/assets/js/citizen_uploadDocuments.js"></script>
+    <script src="/assets/js/citizen_uploadBirthCertificate.js"></script>
+    <script src="/assets/js/citizen_Certificates.js"></script>
 </body>
 
 </html>
