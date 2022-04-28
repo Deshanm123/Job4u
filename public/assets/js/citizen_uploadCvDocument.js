@@ -1,33 +1,33 @@
-const uploadBirthDayForm = document.getElementById('birthday-document-upload-form');
-const birthCertificateInput = document.getElementById('birthCertificate');
-const birthCerificateName = document.getElementById("birthday-certificate-name");
-const birthCerificateStatus = document.getElementById("birthday-certificate-status");
+const uploadCVForm = document.getElementById('cv-document-upload-form');
+const cvInput = document.getElementById('cv-input');
+const certificateName = document.getElementById("cv-name");
+const certificateStatus = document.getElementById("cv-status");
 
 
 
 
 
-// uploading birthcertificate
-uploadBirthDayForm.addEventListener('submit', (e) => {
+
+uploadCVForm.addEventListener('submit', function (e) {
   e.preventDefault();
 
   // representing formdata
   let formData = new FormData();
   // get the file  friom input
-  let birthCertificate = birthCertificateInput.files[0];
+  let cvDocument = cvInput.files[0];
 
-  formData.append('birthCertificate', birthCertificate)
+  formData.append('cv', cvDocument)
+  console.log(cvDocument)
+
 
   $.ajax({
     type: "POST",
-    url: "/citizen/nid/birthCertificate",
+    url: "/citizen/nid/cv",
     contentType: "multipart/form-data",
     data: formData, //donot stringify the formdat
     contentType: false,
     processData: false,
     success: (data) => {
-      console.log("suceess")
-      console.log(data);
       $('#message-alert').html('');
       const alertElement =
         ` <div class=" alert alert-${data.msgType} alert-dismissible fade show py-3 text-center" role="alert"
@@ -38,11 +38,11 @@ uploadBirthDayForm.addEventListener('submit', (e) => {
                 </button>
               </div>;
              `;
-      birthCerificateName.innerHTML = data.file;
-      birthCerificateStatus.innerHTML = 'pending';
-      birthCertificateInput.value = '';
+      certificateStatus.innerHTML = 'pending';
+      certificateName.innerHTML = data.file;
       $('#message-alert').html(alertElement);
       $('#message-alert').show();
+      cvInput.value = '';
     },
     error: (xhr) => {
       let data = xhr.responseJSON;
@@ -64,15 +64,59 @@ uploadBirthDayForm.addEventListener('submit', (e) => {
 })
 
 
+// const updateForm = document.getElementById("update-cv-form");
+// updateForm.addEventListener('submit', (e) => {
+//   e.preventDefault();
+//   $.ajax({
+//     type: "PUT",
+//     url: "/citizen/nid/cv",
+//     contentType: "multipart/form-data",
+//     data: formData, //donot stringify the formdat
+//     contentType: false,
+//     processData: false,
+//     // success: (data) => {
+//     //   console.log(data);
+//     //   $('#message-alert').html('');
+//     //   const alertElement =
+//     //     ` <div class=" alert alert-${data.msgType} alert-dismissible fade show py-3 text-center" role="alert"
+//     //             id="alert-role" >
+//     //             <strong id="message-area">${data.msg}a></strong>
+//     //             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+//     //               <span aria-hidden="true">&times;</span>
+//     //             </button>
+//     //           </div>;
+//     //          `;
+//     //   $('#message-alert').html(alertElement);
+//     //   $('#message-alert').show();
+//     // },
+//     // error: (xhr) => {
+//     //   let data = xhr.responseJSON;
+//     //   $('#message-alert').html('');
+//     //   const alertElement =
+//     //     ` <div class=" alert alert-${data.msgType} alert-dismissible fade show py-3 text-center" role="alert"
+//     //             id="alert-role" >
+//     //             <strong id="message-area">${xhr.status}:${data.msg}</strong>
+//     //             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+//     //               <span aria-hidden="true">&times;</span>
+//     //             </button>
+//     //           </div>;
+//     //         `;
+//     //   $('#message-alert').html(alertElement);
+//     //   $('#message-alert').show();
+//     // }
 
-// delete certificate
-const deleteBirthCertificateForm = document.getElementById("remove-birthcertificate-form");
-deleteBirthCertificateForm.addEventListener('submit', (e) => {
-  console.log("ajax delete birthday certificate");
+//   })
+
+// })
+
+
+const deleteCvForm = document.getElementById("remove-cv-form");
+deleteCvForm.addEventListener('submit', (e) => {
+  console.log("ajax");
   e.preventDefault();
   $.ajax({
     type: "DELETE",
-    url: "/citizen/nid/birthCertificate",
+    url: "/citizen/nid/cv",
     contentType: "multipart/form-data",
     contentType: false,
     processData: false,
@@ -90,9 +134,8 @@ deleteBirthCertificateForm.addEventListener('submit', (e) => {
              `;
       $('#message-alert').html(alertElement);
       $('#message-alert').show();
-      birthCerificateName.innerHTML = '';
-      birthCerificateStatus.innerHTML = '';
-
+      certificateName.innerHTML = '';
+      certificateStatus.innerHTML = '';
       window.scrollTo({ top: 0, behavior: 'smooth' });
     },
     error: (xhr) => {
@@ -112,10 +155,8 @@ deleteBirthCertificateForm.addEventListener('submit', (e) => {
       $('#message-alert').show();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
+
   })
 
 })
-
-
-
 

@@ -3,6 +3,7 @@ const express = require('express');
 const path = require('path');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
+var methodOverride = require('method-override')
 
 // routes
 const citizenRoutes = require('./routes/citizenRoutes');
@@ -17,6 +18,9 @@ const app = express();
 app.set('view engine', 'ejs');
 // cookie-parser
 app.use(cookieParser());
+// override with POST having ?_method=DELETE
+app.use(methodOverride('_method'))
+
 app.use(bodyParser.json());
 // access parameters in req.body
 app.use(bodyParser.urlencoded({ extended: false }));

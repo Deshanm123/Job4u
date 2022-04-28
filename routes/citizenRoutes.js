@@ -21,18 +21,34 @@ router.post('/login', citizenController.postLogin);
 router.get('/logout', citizenController.logOut);
 
 // dashboard
-router.get('/dashboard', checkAuthunetication, citizenController.getDashboard);
+router.get('/dashboard', checkAuthunetication, verfiedUserInfo, citizenController.getDashboard);
 // router.get('/dashboard', checkAuthunetication, verfiedUserInfo, citizenController.getDashboard);
 
 router.get('/dashboard/myCv', checkAuthunetication, verfiedUserInfo, citizenController.getMyCv);
+
+router.post('/dashboard/qualifications', checkAuthunetication, verfiedUserInfo, citizenController.postCitizenQualifications);
+router.delete('/dashboard/qualifications', checkAuthunetication, verfiedUserInfo, citizenController.deleteCitizenQualifications);
+// router.delete('/dashboard/qualifications/remove', checkAuthunetication, verfiedUserInfo, citizenController.deleteCitizenQualifications);
 // // router.post('/login', generalContFroller.postLogin);
+
+// update qualifications
+router.get('/dashboard/updateQualifications', checkAuthunetication, verfiedUserInfo, citizenController.getupdateQualifications);
+router.put('/dashboard/qualifications', checkAuthunetication, verfiedUserInfo, citizenController.updateCitizenQualifications);
+
+// cv
 router.post('/nid/cv', multer.upload.single('cv'), verfiedUserInfo, citizenController.postCvDocument);
+router.put('/nid/cv', multer.upload.single('cv'), checkAuthunetication, verfiedUserInfo, citizenController.putCvDocument);
+router.delete('/nid/cv', checkAuthunetication, verfiedUserInfo, citizenController.deleteCvDocument);
 
-// postBirthCertificatetDocument
+// BirthCertificate
 router.post('/nid/birthCertificate', multer.upload.single('birthCertificate'), verfiedUserInfo, citizenController.postBirthCertificateDocument)
+router.delete('/nid/birthCertificate', checkAuthunetication, verfiedUserInfo, citizenController.deleteBirthCertificateDocument);
 
-router.post('/nid/certificates', multer.upload.array('certificates',3), verfiedUserInfo, citizenController.postCertificateDocuments)
- 
+
+// certificate
+router.post('/nid/certificates', multer.upload.array('certificates', 3), verfiedUserInfo, citizenController.postCertificateDocuments)
+router.delete('/nid/certificates',verfiedUserInfo, citizenController.deleteCertificateDocuments)
+
 // // router.get('/contact', generalController.getContact);
 // // router.post('/contact', generalController.postContact);
 
