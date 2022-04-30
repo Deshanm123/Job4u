@@ -39,6 +39,7 @@ class Citizen {
       });
     });
   }
+
   // get user detials from id 
   static getCitizenDetailsById(id) {
     return new Promise((resolve, reject) => {
@@ -67,7 +68,7 @@ class Citizen {
     return new Promise((resolve, reject) => {
       pool.getConnection((err, connection) => {
         if (err) throw err;
-        connection.query("INSERT INTO cvdetails_tb(userId, birthday, jobName, affiliations, location) VALUES(?,?,?,?,?)", [input.userId, input.birthday, input.jobName, affiliationsJson, locationjson], (err, rows) => {
+        connection.query("INSERT INTO cvdetails_tb(userId, birthday, affiliations, location) VALUES(?,?,?,?)", [input.userId, input.birthday, affiliationsJson, locationjson], (err, rows) => {
           connection.release();
           if (!err) {
             resolve(rows);
@@ -82,6 +83,24 @@ class Citizen {
 
   }
 
+  // gct  all the citizen details-
+  static viewCitizenDetails() {
+    return new Promise((resolve, reject) => {
+      pool.getConnection((err, connection) => {
+        if (err) throw err;
+        connection.query("SELECT * FROM cvdetails_tb", (err, rows) => {
+          connection.release();
+          if (!err) {
+            resolve(rows);
+          }
+          else {
+            reject(err);
+          }
+        });
+      });
+    });
+
+  }
 
 
 }

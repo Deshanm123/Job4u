@@ -1,5 +1,5 @@
 const form = document.getElementById('citizen-registration-form');
-const accType = document.getElementById('nic');
+const accTypeInput = document.getElementById('accType');
 const nic = document.getElementById('nic');
 const uDob = document.querySelector('input[type="date"]');
 const userName = document.getElementById('userName');
@@ -49,8 +49,8 @@ function getFieldName(input) {
     return "User Name";
   } else if (input.id == 'nic') {
     return "National Identity Card";
-  } else if (input.id == 'jobCategory') {
-    return "Job Sector";
+  } else if (input.id == 'accType') {
+    return "Account Type";
   } else if (input.id == 'uDOB') {
     return "birthday";
   }
@@ -161,8 +161,10 @@ function validateNIC(input) {
   }
 }
 
-// affiliations
 
+
+
+// affiliations
 
 // Event listeners
 form.addEventListener('submit', function (e) {
@@ -170,25 +172,27 @@ form.addEventListener('submit', function (e) {
 
   // console.log(longLoc.textContent)
   // console.log(uDob.value)
-  // let jobName = $('#jobCategory').val() //use jquery to get the value  of select
-  let jobName = $('#jobCategory').val() //use jquery to get the value  of select
+
+  //use jquery to get the value  of select
   let regionName = $('#region').val();
   let accType = $('#accType').val();
-  console.log('jobName' + jobName);
+  console.log("acc" + accTypeInput.value)
+
   console.log(regionName);
-  console.log(accType);
+
+
 
   let affilationArr = getAffilations();
   // console.log(affilationArr)
 
 
 
-  let requiredStatus = checkRequired([userName, email, password, cPassword, nic, jobCategory, uDob]);
+  let requiredStatus = checkRequired([userName, email, password, cPassword, nic, uDob, accTypeInput]);
   console.log("is all inputs are filled ?" + requiredStatus)
   if (requiredStatus) {
     if (checkLength(userName, 3, 15) && checkLength(password, 6, 25) && checkEmail(email) && checkPasswordsMatch(password, cPassword) && validateNIC(nic)) {
       console.log("Ready to submit")
-      
+
       res = true;
 
     } else {
@@ -207,9 +211,8 @@ form.addEventListener('submit', function (e) {
           birthday: uDob.value,
           userName: userName.value,
           email: email.value,
-          jobName: jobName,
           affiliations: affilationArr,
-          location: { region: regionName,long: latLoc.textContent, lat: longLoc.textContent },
+          location: { region: regionName, long: latLoc.textContent, lat: longLoc.textContent },
           password: password.value,
 
         }),
@@ -230,6 +233,8 @@ form.addEventListener('submit', function (e) {
            `;
           $('#message-alert').html(alertElement);
           $('#message-alert').show();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+
 
         },
         error: (xhr) => {

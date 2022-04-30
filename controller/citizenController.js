@@ -31,7 +31,7 @@ exports.postRegister = async (req, res) => {
   console.log("Registration citizen called")
   console.log(req.body);
   try {
-    const { nic, userRole, birthday, userName, email, jobName, affiliations, location, password } = req.body;
+    const { nic, userRole, birthday, userName, email, affiliations, location, password } = req.body;
     let emailRegisteredResults = await Citizen.getCitizenDetailsByMail(email);
     //   check  email is not  registered
     if (emailRegisteredResults.length === 0) {
@@ -48,7 +48,7 @@ exports.postRegister = async (req, res) => {
         let token = createToken(registeredUser[0].userId);
 
         // storing cv details on
-        let cvEntry = { userId: registeredUser[0].userId, nic, birthday, jobName, affiliations, location }
+        let cvEntry = { userId: registeredUser[0].userId, nic, birthday, affiliations, location }
 
         let cvRecord = await Citizen.addCVDetails(cvEntry)
         console.log('cvRecord')

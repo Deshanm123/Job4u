@@ -149,6 +149,8 @@ class Document {
       });
     });
   }
+
+  
   static deleteCitizenQualifications(userId) {
     return new Promise((resolve, reject) => {
       pool.getConnection((err, connection) => {

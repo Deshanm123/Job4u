@@ -7,6 +7,7 @@ var methodOverride = require('method-override')
 
 // routes
 const citizenRoutes = require('./routes/citizenRoutes');
+const companyRoutes = require('./routes/companyRoutes');
 
 
 
@@ -32,6 +33,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // configuring routes
 // app.use('/', generalRoutes);
 app.use('/citizen', citizenRoutes);
+app.use('/company',companyRoutes);
 
 app.get('/', (req, res) => {
   res.render('index')
