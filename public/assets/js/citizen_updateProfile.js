@@ -1,13 +1,8 @@
-const form = document.getElementById('citizen-registration-form');
-const accTypeInput = document.getElementById('accType');
+const citizenUpdateForm = document.getElementById('citizen-profile-update-form');
+
 const nic = document.getElementById('nic');
 const uDob = document.querySelector('input[type="date"]');
 const userName = document.getElementById('userName');
-const email = document.getElementById('email');
-// const jobCategory = document.getElementById('jobCategory');
-// affiliations areinserted below
-const password = document.getElementById('password');
-const cPassword = document.getElementById('cPassword');
 const region = document.getElementById('region');
 const latLoc = document.getElementById('lat');
 const longLoc = document.getElementById('long');
@@ -15,7 +10,6 @@ const longLoc = document.getElementById('long');
 // // alert 
 const messageAlert = document.getElementById('message-alert')
 
-let readyToSubmit = [];
 
 // Show input error message
 function showError(input, message) {
@@ -29,28 +23,14 @@ function showSuccess(input) {
   input.classList.add('is-valid')
 }
 
-// Check email is valid
-function checkEmail(input) {
-  const re = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()\.,;\s@\"]+\.{0,1})+([^<>()\.,;:\s@\"]{2,}|[\d\.]+))$/;
-  if (re.test(input.value.trim())) {
-    showSuccess(input);
-    return true;
-  } else {
-    showError(input, 'Email is not valid');
-    return false;
-  }
-}
+
 // // Get fieldname
 function getFieldName(input) {
 
-  if (input.id == 'cPassword') {
-    return "confirm password";
-  } else if (input.id == 'userName') {
+  if (input.id == 'userName') {
     return "User Name";
   } else if (input.id == 'nic') {
     return "National Identity Card";
-  } else if (input.id == 'accType') {
-    return "Account Type";
   } else if (input.id == 'uDOB') {
     return "birthday";
   }
@@ -98,14 +78,6 @@ function checkLength(input, min, max) {
   }
 }
 
-// Check passwords match
-function checkPasswordsMatch(input1, input2) {
-  if (input1.value !== input2.value) {
-    showError(input2, 'Passwords do not match');
-    return false;
-  }
-  return true;
-}
 
 
 
@@ -167,17 +139,11 @@ function validateNIC(input) {
 // affiliations
 
 // Event listeners
-form.addEventListener('submit', function (e) {
+citizenUpdateForm.addEventListener('submit', function (e) {
   e.preventDefault();
-
-  // console.log(longLoc.textContent)
-  // console.log(uDob.value)
 
   //use jquery to get the value  of select
   let regionName = $('#region').val();
-  let accType = $('#accType').val();
-  console.log("acc" + accTypeInput.value)
-
   console.log(regionName);
 
 
@@ -187,10 +153,10 @@ form.addEventListener('submit', function (e) {
 
 
 
-  let requiredStatus = checkRequired([userName, email, password, cPassword, nic, uDob, accTypeInput]);
-  console.log("is all inputs are filled ?" + requiredStatus)
+  let requiredStatus = checkRequired([userName, nic, uDob]);
+  console.log("is all inputs are filled in update profile ?" + requiredStatus)
   if (requiredStatus) {
-    if (checkLength(userName, 3, 15) && checkLength(password, 6, 25) && checkEmail(email) && checkPasswordsMatch(password, cPassword) && validateNIC(nic)) {
+    if (checkLength(userName, 3, 15) && validateNIC(nic)) {
       console.log("Ready to submit")
 
       res = true;
@@ -200,21 +166,18 @@ form.addEventListener('submit', function (e) {
     }
 
     if (res) {
+      console.log("chedk")
       //allow form submission
       $.ajax({
-        type: "POST",
-        url: "/citizen/register",
+        type: "PUT",
+        url: "/citizen/myProfile",
         contentType: "application/json",
         data: JSON.stringify({
-          nic: nic.value,
-          userRole: accType,
+          nic: nic.value.trim(),
           birthday: uDob.value,
-          userName: userName.value,
-          email: email.value,
+          userName: userName.value.trim(),
           affiliations: affilationArr,
           location: { region: regionName, long: longLoc.textContent, lat: latLoc.textContent },
-          
-          password: password.value,
 
         }),
         success: (data) => {
@@ -226,7 +189,7 @@ form.addEventListener('submit', function (e) {
           const alertElement =
             ` <div class=" alert alert-${data.msgType} alert-dismissible fade show py-3 text-center" role="alert"
               id="alert-role" >
-              <strong id="message-area">${data.msg} click here to <a href="/citizen/login">login</a></strong>
+              <strong id="message-area">${data.msg} </strong>
               <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>

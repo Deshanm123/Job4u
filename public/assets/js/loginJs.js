@@ -91,8 +91,18 @@ loginForm.addEventListener('submit', (e) => {
           password: password.value,
         }),
         success: (data) => {
+          let url;
+          if (data.userRole == 'citizen_role') {
+            url = '/citizen/dashboard'
+          }
+          else if (data.userRole == 'company_role') {
+            url = '/company'
+          } else {
+            url = ''
+          }
           console.log(data);
-          window.location.assign('/citizen/dashboard/');
+          console.log("url  value is " + url);
+          url != '' ? window.location.assign(url) : alert("Invalid Login");
         },
         error: (xhr) => {
           let data = xhr.responseJSON;
@@ -108,11 +118,11 @@ loginForm.addEventListener('submit', (e) => {
            </div>
           `;
           $('#message-alert').html(alertElement);
-         $('#message-alert').show();
-       }
-       })
-      }
+          $('#message-alert').show();
+        }
+      })
     }
+  }
 
 })
 

@@ -1,4 +1,5 @@
 const Citizen = require('../model/Citizen');
+const Image = require('../model/Image');
 const Document = require('../model/Document');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -87,9 +88,10 @@ exports.getLogin = (req, res) => {
 exports.postLogin = async (req, res) => {
 
   try {
+    console.log("login")
     const { email, password } = req.body;
     let userRegisteredResults = await Citizen.getCitizenDetailsByMail(email);
-    // console.log(userRegisteredResults)
+    console.log(userRegisteredResults)
     // check user exists
     if (userRegisteredResults.length > 0) {
       const isValidPassword = await bcrypt.compare(password, userRegisteredResults[0].password)
@@ -99,7 +101,9 @@ exports.postLogin = async (req, res) => {
         // storing JWT inside a cookie
         res.cookie('jwt', token, { maxAge: maxAge, httpOnly: true });
 
-        res.status(201).send({ msgType: "success", msg: `Congratulations! your account has been successfully Logged `, token: token });
+        res.status(201).send({
+          msgType: "success", msg: `Congratulations! your account has been successfully Logged `, token: token, userRole: userRegisteredResults[0].userRole
+        });
         // res.render('citizen/citizen-dashboard');
 
       } else {
@@ -240,7 +244,10 @@ exports.putCvDocument = async (req, res) => {
 // delete
 
 const path = require('path');
-const fs = require('fs')
+const fs = require('fs');
+// const { compareSync } = require('bcrypt');
+// const { getCitizenDetailsById } = require('../model/Citizen');
+// const { error } = require('console');
 // delete  document from public
 function removeDocFromUpload(fileName) {
   return new Promise((resolve, reject) => {
@@ -254,33 +261,33 @@ function removeDocFromUpload(fileName) {
 
 exports.deleteCvDocument = async (req, res) => {
 
-  try{
+  try {
 
     let user = res.locals.user;
     let docType = 'cvDocument';
-    
-    let resultDoc = await Document.getDocumentById(user.userId, 'cvDocument')
-  let file = resultDoc[0].cvDocPath;
 
-  
-  removeDocFromUpload(file).then(async (data) => {
-    if (data) {
-      let result = await Document.deleteDocumentById(resultDoc[0].userId, docType);
-      console.log(result)
-      if (result.affectedRows > 0) {
-        console.log("success")
-        res.status(201).send({ msgType: "success", msg: `Congratulations! your CV ${resultDoc[0].cvDocPath} has successfully removed ` });
-      } else {
-        console.log("error 1")
-        res.status(406).send({ msgType: "danger", msg: `CV REMOVAL FAIL : your ${resultDoc[0].cvDocPath} is not removed.` });
+    let resultDoc = await Document.getDocumentById(user.userId, 'cvDocument')
+    let file = resultDoc[0].cvDocPath;
+
+
+    removeDocFromUpload(file).then(async (data) => {
+      if (data) {
+        let result = await Document.deleteDocumentById(resultDoc[0].userId, docType);
+        console.log(result)
+        if (result.affectedRows > 0) {
+          console.log("success")
+          res.status(201).send({ msgType: "success", msg: `Congratulations! your CV ${resultDoc[0].cvDocPath} has successfully removed ` });
+        } else {
+          console.log("error 1")
+          res.status(406).send({ msgType: "danger", msg: `CV REMOVAL FAIL : your ${resultDoc[0].cvDocPath} is not removed.` });
+        }
       }
-    }
-  }).catch((err) => {
-    console.log(err.message)
-    // res.status(406).send({ msgType: "danger", msg: `CV REMOVAL FAIL ${err.message}: your ${resultDoc[0].cvDocPath} is not found.` });
-    res.status(406).send({ msgType: "danger", msg: `CV REMOVAL FAIL ${err.message}.` });
-  })
-  }catch(err) {
+    }).catch((err) => {
+      console.log(err.message)
+      // res.status(406).send({ msgType: "danger", msg: `CV REMOVAL FAIL ${err.message}: your ${resultDoc[0].cvDocPath} is not found.` });
+      res.status(406).send({ msgType: "danger", msg: `CV REMOVAL FAIL ${err.message}.` });
+    })
+  } catch (err) {
     console.log(err.message)
     // res.status(406).send({ msgType: "danger", msg: `CV REMOVAL FAIL ${err.message}: your ${resultDoc[0].cvDocPath} is not found.` });
     res.status(406).send({ msgType: "danger", msg: `CV is not inserted ${err.message}.` });
@@ -326,37 +333,37 @@ exports.postBirthCertificateDocument = async (req, res) => {
 exports.deleteBirthCertificateDocument = async (req, res) => {
   try {
 
-    
+
     console.log("Delete  Birth Certificate")
     let user = res.locals.user;
     let docType = 'birthCertificate';
-    
+
     let resultDoc = await Document.getDocumentById(user.userId, docType);
-    
+
     let file = resultDoc[0].birthDocPath;
-    
+
     removeDocFromUpload(file).then(async (data) => {
       if (data) {
-      let result = await Document.deleteDocumentById(resultDoc[0].userId, docType);
-      // console.log(result)
-      if (result.affectedRows > 0) {
-        console.log("success")
-        res.status(201).send({ msgType: "success", msg: `Congratulations! your Birth Certificate ${file} has successfully removed ` });
-      } else {
-        console.log("error 1")
-        res.status(406).send({ msgType: "danger", msg: `Birth Certificate REMOVAL FAIL : your ${file} is not removed.` });
+        let result = await Document.deleteDocumentById(resultDoc[0].userId, docType);
+        // console.log(result)
+        if (result.affectedRows > 0) {
+          console.log("success")
+          res.status(201).send({ msgType: "success", msg: `Congratulations! your Birth Certificate ${file} has successfully removed ` });
+        } else {
+          console.log("error 1")
+          res.status(406).send({ msgType: "danger", msg: `Birth Certificate REMOVAL FAIL : your ${file} is not removed.` });
+        }
       }
-    }
-  }).catch((err) => {
+    }).catch((err) => {
+      console.log(err.message)
+      //   // res.status(406).send({ msgType: "danger", msg: `CV REMOVAL FAIL ${err.message}: your ${resultDoc[0].cvDocPath} is not found.` });
+      res.status(406).send({ msgType: "danger", msg: `Birth Certificate REMOVAL FAIL ${err.message}.` });
+    })
+  } catch (err) {
     console.log(err.message)
-    //   // res.status(406).send({ msgType: "danger", msg: `CV REMOVAL FAIL ${err.message}: your ${resultDoc[0].cvDocPath} is not found.` });
-    res.status(406).send({ msgType: "danger", msg: `Birth Certificate REMOVAL FAIL ${err.message}.` });
-  })
-}catch (err) {  
- console.log(err.message)
- // res.status(406).send({ msgType: "danger", msg: `CV REMOVAL FAIL ${err.message}: your ${resultDoc[0].cvDocPath} is not found.` });
- res.status(406).send({ msgType: "danger", msg: `CV is not inserted ${err.message}.` });
-}
+    // res.status(406).send({ msgType: "danger", msg: `CV REMOVAL FAIL ${err.message}: your ${resultDoc[0].cvDocPath} is not found.` });
+    res.status(406).send({ msgType: "danger", msg: `CV is not inserted ${err.message}.` });
+  }
 
 
 }
@@ -420,45 +427,45 @@ function removeDocsFromUpload(files) {
 
 
 exports.deleteCertificateDocuments = async (req, res) => {
-  try{
-  console.log("Delete Certificates")
-  let user = res.locals.user;
-  let docType = 'certificates';
+  try {
+    console.log("Delete Certificates")
+    let user = res.locals.user;
+    let docType = 'certificates';
 
-  let resultDoc = await Document.getDocumentById(user.userId, docType);
+    let resultDoc = await Document.getDocumentById(user.userId, docType);
 
-  let file = resultDoc[0].certificates;
+    let file = resultDoc[0].certificates;
 
-  let result = await Document.deleteDocumentById(resultDoc[0].userId, docType);
-  if (result.affectedRows > 0) {
-    let notDeletedArr = [], deletedArr = [];
-    for (let i = 0; i < file.length; i++) {
-      removeDocFromUpload(file[i]).then(async (data) => {
-        if (data) {
-          deletedArr.push(file[i])
-        }
-      }).catch(err => {
-        console.log(err);
-        notDeletedArr.push(file[i])
-      })
-    }
-    if (deletedArr.length < 0) {
-      res.status(400).send({ msgType: "danger", msg: `your Certificates has not removed ` });
+    let result = await Document.deleteDocumentById(resultDoc[0].userId, docType);
+    if (result.affectedRows > 0) {
+      let notDeletedArr = [], deletedArr = [];
+      for (let i = 0; i < file.length; i++) {
+        removeDocFromUpload(file[i]).then(async (data) => {
+          if (data) {
+            deletedArr.push(file[i])
+          }
+        }).catch(err => {
+          console.log(err);
+          notDeletedArr.push(file[i])
+        })
+      }
+      if (deletedArr.length < 0) {
+        res.status(400).send({ msgType: "danger", msg: `your Certificates has not removed ` });
+      } else {
+        res.status(200).send({
+          msgType: "success", msg: `Congratulations! your Certificates Certificates has successfully removed `, files: { deletedArr, notDeletedArr }
+        });
+      }
+
     } else {
-      res.status(200).send({
-        msgType: "success", msg: `Congratulations! your Certificates Certificates has successfully removed `, files: { deletedArr, notDeletedArr }
-      });
+
+      res.status(503).send({ msgType: "danger", msg: `Certificates REMOVAL FAIL : your Certificates has not removed.` });
     }
-
-  } else {
-
-    res.status(503).send({ msgType: "danger", msg: `Certificates REMOVAL FAIL : your Certificates has not removed.` });
+  } catch (err) {
+    console.log(err.message)
+    // res.status(406).send({ msgType: "danger", msg: `CV REMOVAL FAIL ${err.message}: your ${resultDoc[0].cvDocPath} is not found.` });
+    res.status(406).send({ msgType: "danger", msg: `Certificates are not inserted ${err.message}.` });
   }
-}catch (err) {
-  console.log(err.message)
-  // res.status(406).send({ msgType: "danger", msg: `CV REMOVAL FAIL ${err.message}: your ${resultDoc[0].cvDocPath} is not found.` });
-  res.status(406).send({ msgType: "danger", msg: `Certificates are not inserted ${err.message}.` });
-}
 
 }
 // qualifications
@@ -544,7 +551,7 @@ exports.deleteCitizenQualifications = async (req, res) => {
     let results = await Document.deleteCitizenQualifications(user.userId)
 
     if (results.affectedRows > 0) {
-      
+
       res.status(200).redirect('/citizen/dashboard');
       // res.status(201).send({ msgType: "success", msg: `Congratulations! your Qualifications have successfully removed ` });
     } else {
@@ -555,6 +562,104 @@ exports.deleteCitizenQualifications = async (req, res) => {
   }
 }
 
+exports.getMyProfile = async (req, res) => {
+  console.log("get profile")
+  // try {
+  let user = res.locals.user;
+  let cvDetailResults = await Citizen.viewCitizenDetailsById(user.userId)
+  let userDetailResult = await Citizen.getCitizenDetailsById(user.userId);
+
+  // console.log(cvDetailResults)
+  // console.log(userDetailResult)
+  res.render('citizen/citizen_profile', {
+    cvDetails: cvDetailResults[0], userDetails: { email: userDetailResult[0].email, userName: userDetailResult[0].userName }
+  })
+
+}
+
+exports.updateMyProfile = async (req, res) => {
+  console.log("update profile")
+  let user = res.locals.user;
+  console.log(req.body)
+
+  try {
+    const { nic, birthday, userName, affiliations, location } = req.body;
+
+    let cvupdateEntry = { nic, birthday, affiliations, location }
+    console.log(cvupdateEntry);
+
+    // updating username and email
+    let result = await Citizen.updateUserNameById(userName, user.userId);
+    let cvRecordUpdateResults = await Citizen.updateCVDetailsById(cvupdateEntry, user.userId)
+
+    //sucessful registration 
+    console.log('cv update Record')
+    console.log(cvRecordUpdateResults)
+
+    if (result.affectedRows > 0 || cvRecordUpdateResults.affectedRows > 0) {
+      res.status(200).send({
+        msgType: "success", msg: `Congratulations! your account has been successfully updated.`,
+        entryDetials: { username: userName, cvRecordUpdateResults }
+      });
+
+    } else {
+      res.status(405).json({ msgType: "danger", msg: `Your account update failed ${err.message}` })
+    }
+    // if (result.affectedRows > 0){
+    //   if (error) throw error.message
+    //   res.status(200).send({
+    //     msgType: "success", msg: `Congratulations! your account has been successfully updated.`,
+    //     entryDetials: { username: userName }
+    //   });
+    // }
+    // if (cvRecordUpdateResults.affectedRows > 0){
+    //   if (error) throw error.message
+    //   res.status(200).send({
+    //     msgType: "success", msg: `Congratulations! your account has been successfully updated.`,
+    //     entryDetials: { cvRecordUpdateResults }
+    //   });
+  } catch (err) {
+    res.status(405).json({ msgType: "danger", msg: `Your account update failed ${err.message}` })
+    console.log(err);
+  }
+
+
+
+}
+
+// upload user profile image
+exports.uploadProfileBio = async (req, res) => {
+  try {
+    // if (err instanceof multer.MulterError) {
+    //   throw err.message;
+    // }else{
+
+      let user = res.locals.user;
+      // const bioDescription = req.body;
+      // console.log(user.userId)
+      const { bioDescription} = req.body;
+      console.log(req.file)
+      // console.log(bioDescription);
+
+    const result = await Citizen.postBioDescription(user.userId, req.file.filename, bioDescription);
+    
+    if (result.affectedRows > 0) {
+      res.status(200).json({
+        msgType: "success", msg: `Congratulations! your bio successfully recorded.`,
+        bio:{fileName: req.file.filename,description:bioDescription}
+      });
+    } else {
+      res.status(405).json({ msgType: "danger", msg: `Your account bio record failed ${err.message}` })
+    }
+  // }
+
+
+  } catch (err) {
+    res.status(405).json({ msgType: "danger", msg: `Your account update failed ${err.message}` })
+  }
+
+}
+
 
 // logout
 
@@ -563,8 +668,6 @@ exports.logOut = (req, res) => {
   console.log("logout");
 
   res.clearCookie("jwt");
-
-
   res.redirect('/citizen/login'); //redirect to login
 
 }

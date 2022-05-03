@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const citizenController = require('../controller/citizenController.js');
 const multer = require('../services/multer');
+// const imageUpload  = require('../services/imageUpload');
 
 
 
@@ -47,12 +48,16 @@ router.delete('/nid/birthCertificate', checkAuthunetication, verfiedUserInfo, ci
 
 // certificate
 router.post('/nid/certificates', multer.upload.array('certificates', 3), verfiedUserInfo, citizenController.postCertificateDocuments)
-router.delete('/nid/certificates',verfiedUserInfo, citizenController.deleteCertificateDocuments)
+router.delete('/nid/certificates', verfiedUserInfo, citizenController.deleteCertificateDocuments)
 
 // // router.get('/contact', generalController.getContact);
 // // router.post('/contact', generalController.postContact);
 
+// profile
+router.get('/myProfile', checkAuthunetication, verfiedUserInfo, citizenController.getMyProfile);
+router.put('/myProfile', checkAuthunetication, verfiedUserInfo, citizenController.updateMyProfile);
 
+router.post('/myProfile/profileImage', verfiedUserInfo, multer.upload.single('avatar'), citizenController.uploadProfileBio)
 
 
 module.exports = router;

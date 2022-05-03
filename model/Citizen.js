@@ -57,6 +57,23 @@ class Citizen {
       });
     });
   }
+  // update userName  from id 
+  static updateUserNameById(userName, id) {
+    return new Promise((resolve, reject) => {
+      pool.getConnection((err, connection) => {
+        if (err) throw err;
+        connection.query(" UPDATE  user_tb SET userName = ?   WHERE userId = ?", [userName, id], (err, rows) => {
+          connection.release();
+          if (!err) {
+            resolve(rows);
+          }
+          else {
+            reject(err);
+          }
+        });
+      });
+    });
+  }
 
 
   // get cv details 
@@ -68,7 +85,7 @@ class Citizen {
     return new Promise((resolve, reject) => {
       pool.getConnection((err, connection) => {
         if (err) throw err;
-        connection.query("INSERT INTO cvdetails_tb(userId, birthday, affiliations, location) VALUES(?,?,?,?)", [input.userId, input.birthday, affiliationsJson, locationjson], (err, rows) => {
+        connection.query("INSERT INTO cvdetails_tb(userId,nic, birthday, affiliations, location) VALUES(?,?,?,?,?)", [input.userId, input.nic, input.birthday, affiliationsJson, locationjson], (err, rows) => {
           connection.release();
           if (!err) {
             resolve(rows);
@@ -79,8 +96,6 @@ class Citizen {
         });
       });
     });
-
-
   }
 
   // gct  all the citizen details-
@@ -100,6 +115,62 @@ class Citizen {
       });
     });
 
+  }
+  // gct  all the citizen details-
+  static viewCitizenDetailsById(userId) {
+    return new Promise((resolve, reject) => {
+      pool.getConnection((err, connection) => {
+        if (err) throw err;
+        connection.query("SELECT * FROM cvdetails_tb WHERE userId = ?", userId, (err, rows) => {
+          connection.release();
+          if (!err) {
+            resolve(rows);
+          }
+          else {
+            reject(err);
+          }
+        });
+      });
+    });
+
+  }
+  static updateCVDetailsById(input, userId) {
+    console.log(input)
+    let affiliationsJson = JSON.stringify(Object.assign({}, input.affiliations));
+    let locationjson = JSON.stringify(Object.assign({}, input.location));
+    return new Promise((resolve, reject) => {
+      pool.getConnection((err, connection) => {
+        if (err) throw err;
+        connection.query("UPDATE cvdetails_tb SET nic = ? ,birthday = ? ,affiliations = ?, location = ?  WHERE userId = ?", [input.nic, input.birthday, affiliationsJson, locationjson, userId,], (err, rows) => {
+          connection.release();
+          if (!err) {
+            resolve(rows);
+          }
+          else {
+            reject(err);
+          }
+        });
+      });
+    });
+
+  }
+
+  // add Bio
+  static postBioDescription(userId, bio, fileName) {
+    return new Promise((resolve, reject) => {
+      pool.getConnection((err, connection) => {
+        if (err) throw err;
+        connection.query("INSERT INTO profile_tb(userId,imgPhoto,profileBio) VALuES (?,?,?)", [userId, fileName, bio], (err, rows) => {
+          connection.release();
+          if (!err) {
+            resolve(rows);
+          }
+          else {
+            reject(err);
+          }
+        });
+      });
+    });
   }
 
 
