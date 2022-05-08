@@ -160,7 +160,43 @@ class Citizen {
     return new Promise((resolve, reject) => {
       pool.getConnection((err, connection) => {
         if (err) throw err;
-        connection.query("INSERT INTO profile_tb(userId,imgPhoto,profileBio) VALuES (?,?,?)", [userId, fileName, bio], (err, rows) => {
+        connection.query("INSERT INTO profile_tb(userId,profileImg,profileBio) VALUES (?,?,?)", [userId, fileName, bio], (err, rows) => {
+          connection.release();
+          if (!err) {
+            resolve(rows);
+          }
+          else {
+            reject(err);
+          }
+        });
+      });
+    });
+  }
+
+  // delete bio
+  static deleteBioDescription(userId) {
+    return new Promise((resolve, reject) => {
+      pool.getConnection((err, connection) => {
+        if (err) throw err;
+        connection.query("DELETE FROM  profile_tb WHERE userId = ?", [userId], (err, rows) => {
+          connection.release();
+          if (!err) {
+            resolve(rows);
+          }
+          else {
+            reject(err);
+          }
+        });
+      });
+    });
+  }
+
+  // view bio
+  static viewBioDescription(userId) {
+    return new Promise((resolve, reject) => {
+      pool.getConnection((err, connection) => {
+        if (err) throw err;
+        connection.query("SELECT * FROM  profile_tb WHERE userId = ?", userId, (err, rows) => {
           connection.release();
           if (!err) {
             resolve(rows);

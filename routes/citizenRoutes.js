@@ -25,7 +25,7 @@ router.get('/logout', citizenController.logOut);
 router.get('/dashboard', checkAuthunetication, verfiedUserInfo, citizenController.getDashboard);
 // router.get('/dashboard', checkAuthunetication, verfiedUserInfo, citizenController.getDashboard);
 
-router.get('/dashboard/myCv', checkAuthunetication, verfiedUserInfo, citizenController.getMyCv);
+router.get('/dashboard/myBio', checkAuthunetication, verfiedUserInfo, citizenController.getBio);
 
 router.post('/dashboard/qualifications', checkAuthunetication, verfiedUserInfo, citizenController.postCitizenQualifications);
 router.delete('/dashboard/qualifications', checkAuthunetication, verfiedUserInfo, citizenController.deleteCitizenQualifications);
@@ -58,6 +58,8 @@ router.get('/myProfile', checkAuthunetication, verfiedUserInfo, citizenControlle
 router.put('/myProfile', checkAuthunetication, verfiedUserInfo, citizenController.updateMyProfile);
 
 router.post('/myProfile/profileImage', verfiedUserInfo, multer.upload.single('avatar'), citizenController.uploadProfileBio)
+router.post('/myProfile/profileImage/:id', verfiedUserInfo, multer.upload.single('avatar'), citizenController.uploadProfileBio)
+router.delete('/myProfile/profileImage/:id', verfiedUserInfo, citizenController.deleteProfileBio)
 
 
 module.exports = router;

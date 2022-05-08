@@ -8,6 +8,7 @@ var methodOverride = require('method-override')
 // routes
 const citizenRoutes = require('./routes/citizenRoutes');
 const companyRoutes = require('./routes/companyRoutes');
+const bureauRoutes = require('./routes/bureauRoutes');
 
 
 
@@ -33,7 +34,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 // configuring routes
 // app.use('/', generalRoutes);
 app.use('/citizen', citizenRoutes);
-app.use('/company',companyRoutes);
+app.use('/company', companyRoutes);
+app.use('/bureau', bureauRoutes);
 
 app.get('/', (req, res) => {
   res.render('index')
@@ -48,3 +50,4 @@ app.get('/contact', (req, res) => {
 // app.use('/', generalRoutes);
 
 app.listen(5000, () => console.log('listening to server on 5000'))
+// app.listen(5000,'192.168.8.153', () => console.log('listening to server on 5000'))

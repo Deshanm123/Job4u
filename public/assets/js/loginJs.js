@@ -97,7 +97,9 @@ loginForm.addEventListener('submit', (e) => {
           }
           else if (data.userRole == 'company_role') {
             url = '/company'
-          } else {
+          }else if (data.userRole == 'bureau_role'){
+            url ='/bureau'
+          }else {
             url = ''
           }
           console.log(data);

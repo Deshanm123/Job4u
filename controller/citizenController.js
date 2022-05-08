@@ -12,7 +12,7 @@ const encryptPassword = async (password) => {
   return encrptedPassword;
 }
 
-const maxAge = 10 * 24 * 60 * 60; //millsieconds
+const maxAge = 1000 * 24 * 60 * 60; //millsieconds
 const createToken = (id) => {
   return jwt.sign({ id }, 'net ninja secret', {
     expiresIn: maxAge
@@ -170,9 +170,20 @@ exports.getDashboard = async (req, res) => {
 
 };
 
-exports.getMyCv = (req, res) => {
-  console.log(res.locals.user)
-  res.render('citizen/citizen-cv');
+// get bio
+exports.getBio =async (req, res) => {
+  try{
+    console.log("get Bio")
+    let user =res.locals.user;
+    // console.log(user.userId);
+    const results = await Citizen.viewBioDescription(user.userId);
+    console.log(results)
+    res.render('citizen/citizen_bio', { myBio: results[0]});
+
+  }
+  catch(err){
+    console.log(err);
+  }
 };
 
 // upload cv
@@ -332,8 +343,6 @@ exports.postBirthCertificateDocument = async (req, res) => {
 
 exports.deleteBirthCertificateDocument = async (req, res) => {
   try {
-
-
     console.log("Delete  Birth Certificate")
     let user = res.locals.user;
     let docType = 'birthCertificate';
@@ -634,25 +643,87 @@ exports.uploadProfileBio = async (req, res) => {
     //   throw err.message;
     // }else{
 
-      let user = res.locals.user;
-      // const bioDescription = req.body;
-      // console.log(user.userId)
-      const { bioDescription} = req.body;
-      console.log(req.file)
-      // console.log(bioDescription);
+    let user = res.locals.user;
+
+    const { bioDescription } = req.body;
+    console.log(req.file)
 
     const result = await Citizen.postBioDescription(user.userId, req.file.filename, bioDescription);
-    
+
     if (result.affectedRows > 0) {
       res.status(200).json({
         msgType: "success", msg: `Congratulations! your bio successfully recorded.`,
-        bio:{fileName: req.file.filename,description:bioDescription}
+        bio: { userId: user.userId, fileName: req.file.filename, description: bioDescription }
       });
     } else {
       res.status(405).json({ msgType: "danger", msg: `Your account bio record failed ${err.message}` })
     }
-  // }
+    // }
 
+
+  } catch (err) {
+    res.status(405).json({ msgType: "danger", msg: `Your account update failed ${err.message}` })
+  }
+}
+
+
+exports.deleteProfileBio = async (req, res) => {
+  try {
+
+    let user = res.locals.user;
+    const result = await Citizen.deleteBioDescription(user.userId);
+
+    if (result.affectedRows > 0) {
+      res.status(200).json({
+        msgType: "success", msg: `Congratulations! your bio successfully recorded.`,
+        bio: { userId: user.userId, fileName: req.file.filename, description: bioDescription }
+      });
+    } else {
+      res.status(405).json({ msgType: "danger", msg: `Your account bio record failed ${err.message}` })
+    }
+
+  } catch (err) {
+    res.status(405).json({ msgType: "danger", msg: `Your account update failed ${err.message}` })
+  }
+
+}
+
+exports.viewProfileBio = async (req, res) => {
+  try {
+
+    let user = res.locals.user;
+    const result = await Citizen.viewBioDescription(userId);
+
+    if (result.affectedRows > 0) {
+      res.status(200).json({
+        msgType: "success", msg: `Congratulations! your bio successfully recorded.`,
+        bio: { userId: user.userId, fileName: req.file.filename, description: bioDescription }
+      });
+    } else {
+      res.status(405).json({ msgType: "danger", msg: `Your account bio record failed ${err.message}` })
+    }
+
+  } catch (err) {
+    res.status(405).json({ msgType: "danger", msg: `Your account update failed ${err.message}` })
+  }
+
+}
+
+exports.deleteProfileBio = async (req, res) => {
+  try {
+
+    // let user = res.locals.user;
+    console.log(req.params)
+    const result = await Citizen.deleteProfileBio(user.userId);
+
+    // if (result.affectedRows > 0) {
+    //   res.status(200).json({
+    //     msgType: "success", msg: `Congratulations! your bio successfully recorded.`,
+    //     bio: { userId: user.userId, fileName: req.file.filename, description: bioDescription }
+    //   });
+    // } else {
+    //   res.status(405).json({ msgType: "danger", msg: `Your account bio record failed ${err.message}` })
+    // }
 
   } catch (err) {
     res.status(405).json({ msgType: "danger", msg: `Your account update failed ${err.message}` })
